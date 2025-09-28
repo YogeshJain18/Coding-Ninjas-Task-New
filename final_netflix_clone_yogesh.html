@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
+    <style>
+        /* Enhanced Netflix Styling */
+        :root {
+            --netflix-red: #E50914;
+            --netflix-dark-red: #B81D24;
+            --dark-gray: #141414;
+            --medium-gray: #2F2F2F;
+            --light-gray: #B3B3B3;
+            --transition-time: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-gray);
+            color: white;
+            font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding-top: 70px;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            transition: color var(--transition-time) ease;
+        }
+
+        a:hover {
+            color: var(--light-gray);
+        }
+
+        /* Enhanced Header */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 4%;
+            height: 70px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0));
+            z-index: 999;
+            transition: all var(--transition-time) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            color: var(--netflix-red);
+            font-size: 1.8rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.9;
+            position: relative;
+            transition: all var(--transition-time) ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--netflix-red);
+            transition: width var(--transition-time) ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .user-profile {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--netflix-red), var(--netflix-dark-red));
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition-time) ease;
+            position: relative;
+        }
+
+        .user-profile::before {
+            content: '👤';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+        }
+
+        .user-profile:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+        }
+
+        /* Enhanced Hero Section */
+        .hero-section {
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
+                        url('https://image.tmdb.org/t/p/original/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 4%;
+            animation: heroFadeIn 2s ease-out;
+        }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: scale(1.1); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(77deg, rgba(0,0,0,.7), transparent 85%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 90%;
+            animation: slideInLeft 1.5s ease-out 0.5s both;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 500px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .buttons .play-btn, .buttons .info-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: all var(--transition-time) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .play-btn {
+            background-color: white;
+            color: black;
+        }
+
+        .play-btn:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .info-btn {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+
+        .info-btn:hover {
+            background-color: rgba(109, 109, 110, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Enhanced Content Rows */
+        .content-row {
+            margin-bottom: 40px;
+            padding-left: 4%;
+            position: relative;
+        }
+
+        .content-row h2 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #E5E5E5;
+        }
+
+        .row-container {
+            position: relative;
+            z-index: 1; /* Establishes stacking context for row backgrounds */
+            display: flex;
+            align-items: center;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity var(--transition-time) ease;
+        }
+
+        .scroll-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .scroll-left {
+            left: 10px;
+        }
+
+        .scroll-right {
+            right: 10px;
+        }
+
+        .row-container:hover .scroll-btn {
+            opacity: 1;
+        }
+
+        .row-posters {
+            display: flex;
+            overflow-x: scroll;
+            padding-bottom: 15px;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            gap: 10px;
+            cursor: grab;
+            position: relative;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .row-posters:active {
+            cursor: grabbing;
+        }
+
+        .row-posters::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .row-posters::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .row-posters::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .row-posters::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .poster-item {
+            min-width: 160px;
+            height: 240px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--medium-gray);
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .poster-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%);
+            opacity: 0;
+            transition: opacity var(--transition-time) ease;
+        }
+
+        .poster-item:hover {
+            transform: scale(1.1) translateY(-10px);
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .poster-item:hover::before {
+            opacity: 1;
+        }
+
+        .poster-info {
+            position: relative;
+            z-index: 2;
+            padding: 15px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all var(--transition-time) ease;
+            width: 100%;
+        }
+
+        .poster-item:hover .poster-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Enhanced Poster Hover Functionalities */
+        .poster-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .action-btn {
+            background: rgba(42, 42, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .action-btn:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn.play-icon {
+            background-color: white;
+            color: var(--dark-gray);
+            border-color: white;
+            font-size: 14px;
+        }
+
+        .action-btn.play-icon:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .action-btn.info-icon {
+            margin-left: auto; /* Pushes this button to the far right */
+            position: relative; /* Required for positioning the ::after pseudo-element */
+        }
+
+        .action-btn.info-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-style: solid;
+            border-width: 6px 6px 0 6px; 
+            border-color: white transparent transparent transparent;
+            transform: translate(-50%, -35%);
+        }
+
+        .poster-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .poster-meta {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Top 10 Row Styles */
+        .row-posters-top-10 {
+            gap: 45px; 
+            padding-left: 25px;
+        }
+
+        .top-10-item {
+            display: flex;
+            align-items: flex-end; 
+            position: relative;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        
+        .top-10-rank {
+            font-size: 10rem;
+            font-weight: 800;
+            line-height: 0.8;
+            color: var(--dark-gray);
+            -webkit-text-stroke: 4px var(--light-gray);
+            text-stroke: 4px var(--light-gray);
+            margin-right: -40px; 
+            z-index: 1;
+        }
+
+        .top-10-item .poster-item {
+             z-index: 2; 
+        }
+
+        .top-10-item:hover {
+            transform: scale(1.03); 
+        }
+
+        /* Row Background Images */
+        #comedy-row .row-container::before,
+        #top10-row .row-container::before {
+            content: '';
+            position: absolute;
+            top: -60px; 
+            left: 0;
+            right: 0;
+            bottom: -30px; 
+            background-size: cover;
+            background-position: center 20%;
+            opacity: 0.1; 
+            z-index: -2; 
+            mask-image: linear-gradient(to right, black 0%, black 70%, transparent 100%);
+        }
+
+        #comedy-row .row-container::after,
+        #top10-row .row-container::after {
+           content: '';
+            position: absolute;
+            top: -60px;
+            left: 0;
+            right: 0;
+            bottom: -30px;
+            background: linear-gradient(to right, var(--dark-gray) 0%, transparent 40%, transparent 60%, var(--dark-gray) 100%);
+            z-index: -1;
+        }
+        
+        #comedy-row .row-container::before {
+            background-image: url('https://image.tmdb.org/t/p/original/6nVWLS23h2d2dPN2dG2o1i4yD50.jpg'); /* Knives Out */
+        }
+
+        #top10-row .row-container::before {
+            background-image: url('https://image.tmdb.org/t/p/original/c4wVmq2y3m3h7A4g4d1o3FkIkhA.jpg'); /* RRR */
+        }
+
+
+        /* Movie poster backgrounds - Fixed URLs */
+        .trending-1 { background-image: url('https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg'); }
+        .trending-2 { background-image: url('https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg'); }
+        .trending-3 { background-image: url('https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg'); }
+        .trending-4 { background-image: url('https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg'); }
+        .trending-5 { background-image: url('https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg'); }
+        .trending-6 { background-image: url('https://image.tmdb.org/t/p/w500/ngl2FKBlU4fhbdsrtdom9LVLBXw.jpg'); }
+        .trending-7 { background-image: url('https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg'); }
+        .trending-8 { background-image: url('https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg'); }
+
+        .scifi-1 { background-image: url('https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg'); }
+        .scifi-2 { background-image: url('https://image.tmdb.org/t/p/w500/b33nnKl1GSFbao4l3fZDDqsMx0F.jpg'); }
+        .scifi-3 { background-image: url('https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg'); }
+        .scifi-4 { background-image: url('https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg'); }
+        .scifi-5 { background-image: url('https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg'); }
+        .scifi-6 { background-image: url('https://image.tmdb.org/t/p/w500/6KErczPBROQty7QoIsaa6wJYXZi.jpg'); }
+        .scifi-7 { background-image: url('https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg'); }
+        .scifi-8 { background-image: url('https://image.tmdb.org/t/p/w500/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg'); }
+        
+       .comedy-1 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/6PFJrMvoQwBxQITLYHj09VeJ37q.jpg'); }
+.comedy-2 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/A0uS9rHR56FeBtpjVki16M5xxSW.jpg'); }
+.comedy-3 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg'); }
+.comedy-4 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/9w2y0146P5EjLw63FHGWRRpqQ6v.jpg'); }
+.comedy-5 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/tZPTcdGTpxq4yJx1YxqBl0gthNz.jpg'); }
+.comedy-6 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/qF2LJ0jwWrtXSuT4AFD5OS2IqaT.jpg'); }
+.comedy-7 { background-image: url('https://cdn.flickeringmyth.com/wp-content/uploads/2018/01/Game-Night-poster-2.jpg'); }
+.comedy-8 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/pThyQovXQrw2m0s9x82twj48Jq4.jpg'); }
+.comedy-9 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/2aSxRDmisJP90H3S0aocyuQIe4z.jpg'); }
+.comedy-10 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/gnAfqiV7yO3Jq9IntTmwkcaICqc.jpg'); }
+.comedy-11 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/clq4So9spa9cXk3MZy2iMdqkxP2.jpg'); }
+.comedy-12 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/wHZbv2ZYJ74F5Vms1QSS09Qw1tF.jpg'); }
+.comedy-13 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/tY2FpgzPVx92JrYveWt4bn3cMyD.jpg'); }
+.comedy-14 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/dgXPhzNJH8HFTBjXPB177yNx6RI.jpg'); }
+
+        .continue-1 { background-image: url('https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg'); }
+        .continue-2 { background-image: url('https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg'); }
+        .continue-3 { background-image: url('https://image.tmdb.org/t/p/w500/qAZ0pzat24kLdO3o8ejmbLxyOac.jpg'); }
+        .continue-4 { background-image: url('https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg'); }
+        .continue-5 { background-image: url('https://image.tmdb.org/t/p/original/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg'); }
+        .continue-6 { background-image: url('https://image.tmdb.org/t/p/w500/r7vmZjiyZw9rpJMQJdXpjgiCOk9.jpg'); }
+        .continue-7 { background-image: url('https://image.tmdb.org/t/p/w500/AdyJH8kDm8xT8IKTlgpEC15ny4u.jpg'); }
+        .continue-8 { background-image: url('https://image.tmdb.org/t/p/w500/cvsXj3I9Q2iyyIo95AecSd1tad7.jpg'); }
+
+        .top10-1 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/u4oulQMCInrr0p0E2SyGwPHKt0Q.jpg'); }
+        .top10-2 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/imy0RTW2xGZNF0SCY3jf672VQmP.jpg'); }
+        .top10-3 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/36hkylLil37eF45uIeSTe31NRVq.jpg'); }
+        .top10-4 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/Ac8ruycRXzgcsndTZFK6ouGA0FA.jpg'); }
+        .top10-5 { background-image: url('https://image.tmdb.org/t/p/original/9PFonBhy4cQy7Jz20NpMygczOkv.jpg'); }
+        .top10-6 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/4ULEEvH0hDYnbWN3nClrb88sYCF.jpg'); }
+        .top10-7 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/jFt1gS4BGHlK8xt76Y81Alp4dbt.jpg'); }
+        .top10-8 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/nEufeZlyAOLqO2brrs0yeF1lgXO.jpg'); }
+        .top10-9 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/uEbNtFbK4At9WBDGap23lt1qO9n.jpg'); }
+        .top10-10 { background-image: url('https://media.themoviedb.org/t/p/w188_and_h282_bestv2/p0qM8hhlMF5DuxHBzl2EZR6TehX.jpg'); }
+
+        /* Enhanced Footer */
+        footer {
+            padding: 50px 4%;
+            text-align: center;
+            color: var(--light-gray);
+            font-size: 0.9rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            margin-top: 60px;
+        }
+
+        footer p:first-child {
+            margin-bottom: 20px;
+        }
+
+        footer p:last-child {
+            opacity: 0.7;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .navbar {
+                padding: 15px 50px;
+            }
+
+            .nav-links {
+                display: flex;
+            }
+
+            .hero-content {
+                max-width: 50%;
+            }
+
+            .hero-content h1 {
+                font-size: 4.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.4rem;
+                max-width: 600px;
+            }
+
+            .buttons .play-btn, .buttons .info-btn {
+                padding: 15px 35px;
+                font-size: 1.1rem;
+            }
+
+            .poster-item {
+                min-width: 200px;
+                height: 300px;
+            }
+
+             .top-10-item .poster-item {
+                min-width: 200px;
+                height: 300px;
+            }
+
+            .content-row {
+                padding-left: 50px;
+            }
+
+            .content-row h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .poster-item {
+                min-width: 230px;
+                height: 345px;
+            }
+             .top-10-item .poster-item {
+                min-width: 230px;
+                height: 345px;
+            }
+        }
+
+        /* Smooth transitions for better UX */
+        * {
+            transition: opacity var(--transition-time) ease, transform var(--transition-time) ease;
+        }
+
+        /* Focus states for accessibility */
+        button:focus, .poster-item:focus {
+            outline: 2px solid var(--netflix-red);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar" id="navbar">
+        <div class="logo">NETFLIX</div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Movies</a>
+            <a href="#">New & Popular</a>
+            <a href="#">My List</a>
+        </nav>
+        <div class="user-profile" title="Profile & Settings"></div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>The Super Mario Bros. Movie</h1>
+                <p>A plumber named Mario travels through an underground labyrinth with his brother Luigi, trying to save a captured princess. An epic adventure filled with action, comedy, and heart in the colorful world of the Mushroom Kingdom.</p>
+                <div class="buttons">
+                    <button class="play-btn">
+                        <span>▶</span> Play
+                    </button>
+                    <button class="info-btn">
+                        <span>ⓘ</span> More Info
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-row">
+            <h2>Trending Now</h2>
+            <div class="row-container">
+                <button class="scroll-btn scroll-left">‹</button>
+                <div class="row-posters" data-category="trending">
+                    <div class="poster-item trending-1" tabindex="0">
+                        <div class="poster-info">
+                            <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Fast X</div>
+                            <div class="poster-meta">2023 • Action/Crime • 2h 21m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-2" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Harry Potter and the Philosopher's Stone</div>
+                            <div class="poster-meta">2001 • Family/Fantasy • 2h 39m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-3" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Oppenheimer</div>
+                            <div class="poster-meta">2023 • Thriller • 3h</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-4" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Flash</div>
+                            <div class="poster-meta">2023 • Action/Sci-Fi • 2h 24m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-5" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Super Mario Bros.
+                            </div>
+                            <div class="poster-meta">2023 • Family/Comedy • 1h 32m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-6" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Ant-Man and the Wasp: Quantumania </div>
+                            <div class="poster-meta">2022 • Action/Adventure • 2h 5m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-7" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Batman</div>
+                            <div class="poster-meta">2022 • Action/Crime • 2h 56m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item trending-8" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Barbie</div>
+                            <div class="poster-meta">2023 • Fantasy/Adventure • 1h 54m</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn scroll-right">›</button>
+            </div>
+        </section>
+
+        <section class="content-row" id="comedy-row">
+            <h2>Comedy Movies</h2>
+            <div class="row-container">
+                <button class="scroll-btn scroll-left">‹</button>
+                <div class="row-posters" data-category="comedy">
+                    <div class="poster-item comedy-1" tabindex="0">
+                        <div class="poster-info">
+                            <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Free Guy</div>
+                            <div class="poster-meta">2021 • Action/Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-2" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Hangover</div>
+                            <div class="poster-meta">2009 • Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-3" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Superbad</div>
+                            <div class="poster-meta">2007 • Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-4" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">21 Jump Street</div>
+                            <div class="poster-meta">2012 • Action/Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-5" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Ted</div>
+                            <div class="poster-meta">2012 • Comedy/Fantasy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-6" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">We're the Millers</div>
+                            <div class="poster-meta">2013 • Comedy/Crime</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-7" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Game Night</div>
+                            <div class="poster-meta">2018 • Comedy/Thriller</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-8" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Knives Out</div>
+                            <div class="poster-meta">2019 • Mystery/Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-9" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Booksmart</div>
+                            <div class="poster-meta">2019 • Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-10" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Palm Springs</div>
+                            <div class="poster-meta">2020 • Sci-Fi/Comedy</div>
+                        </div>
+                    </div>
+                    <div class="poster-item comedy-11" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Nice Guys</div>
+                            <div class="poster-meta">2016 • Action/Comedy</div>
+                        </div>
+                    </div>
+                     <div class="poster-item comedy-12" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Dumb and Dumber</div>
+                            <div class="poster-meta">1994 • Comedy</div>
+                        </div>
+                    </div>
+                     <div class="poster-item comedy-13" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Step Brothers</div>
+                            <div class="poster-meta">2008 • Comedy</div>
+                        </div>
+                    </div>
+                     <div class="poster-item comedy-14" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Shaun of the Dead</div>
+                            <div class="poster-meta">2004 • Horror/Comedy</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn scroll-right">›</button>
+            </div>
+        </section>
+
+        <section class="content-row">
+            <h2>Sci-Fi Movies</h2>
+            <div class="row-container">
+                <button class="scroll-btn scroll-left">‹</button>
+                <div class="row-posters" data-category="scifi">
+                    <div class="poster-item scifi-1" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Dune: Part Two</div>
+                            <div class="poster-meta">2024 • Sci-Fi • 2h 46m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-2" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Alien: Romulus</div>
+                            <div class="poster-meta">2024 • Horror/Sci-Fi • 2h 2m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-3" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Inside Out 2</div>
+                            <div class="poster-meta">2024 • Family/Comedy • 1h 36m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-4" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Interstellar</div>
+                            <div class="poster-meta">2014 • Sci-Fi/Adventure • 2h 49m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-5" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">The Matrix</div>
+                            <div class="poster-meta">1999 • Action/Sci-Fi • 2h 16m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-6" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Tom and Jerry</div>
+                            <div class="poster-meta">2021 • Family/Comedy • 1h 41m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-7" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Blade Runner 2049</div>
+                            <div class="poster-meta">2017 • Sci-fi/Action • 2h 44m</div>
+                        </div>
+                    </div>
+                    <div class="poster-item scifi-8" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Ad Astra</div>
+                            <div class="poster-meta">2019 • Sci-fi/Adventure • 2h 4m</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn scroll-right">›</button>
+            </div>
+        </section>
+        
+        <section class="content-row">
+            <h2>Continue Watching for John</h2>
+            <div class="row-container">
+                <button class="scroll-btn scroll-left">‹</button>
+                <div class="row-posters" data-category="continue">
+                    <div class="poster-item continue-1" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Avatar: The Way of Water</div>
+                            <div class="poster-meta">57m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-2" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Spider-Man: Across the Spider-Verse</div>
+                            <div class="poster-meta">42m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-3" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Black Widow</div>
+                            <div class="poster-meta">15m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-4" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">John Wick: Chapter 4</div>
+                            <div class="poster-meta">33m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-5" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Money Heist</div>
+                            <div class="poster-meta">S3:E6 • 22m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-6" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Guardians of the Galaxy</div>
+                            <div class="poster-meta">51m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-7" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Doctor Strange in the Multiverse of Madness</div>
+                            <div class="poster-meta">18m left</div>
+                        </div>
+                    </div>
+                    <div class="poster-item continue-8" tabindex="0">
+                        <div class="poster-info">
+                             <div class="poster-actions">
+                                <button class="action-btn play-icon" title="Play">▶</button>
+                                <button class="action-btn add-icon" title="Add to My List">+</button>
+                                <button class="action-btn like-icon" title="Like">👍</button>
+                                <button class="action-btn info-icon" title="More Info"></button>
+                            </div>
+                            <div class="poster-title">Creed III</div>
+                            <div class="poster-meta">29m left</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn scroll-right">›</button>
+            </div>
+        </section>
+
+        <section class="content-row" id="top10-row">
+            <h2>Top 10 in India Today</h2>
+            <div class="row-container">
+                <button class="scroll-btn scroll-left">‹</button>
+                <div class="row-posters row-posters-top-10" data-category="top10">
+                    <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">1</span>
+                        <div class="poster-item top10-1">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">The Romantics</div>
+                                <div class="poster-meta">2023 • Documentary</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">2</span>
+                        <div class="poster-item top10-2">
+                             <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Bimbisara</div>
+                                <div class="poster-meta">2022 • Action/Fantasy</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">3</span>
+                        <div class="poster-item top10-3">
+                             <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Love Aaj Kal</div>
+                                <div class="poster-meta">2020 • Romance/Drama</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">4</span>
+                        <div class="poster-item top10-4">
+                             <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Alice in Borderland</div>
+                                <div class="poster-meta">2020 • Thriller/Sci-Fi</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">5</span>
+                        <div class="poster-item top10-5">
+                             <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Wednesday</div>
+                                <div class="poster-meta">2022 • Comedy/Fantasy</div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">6</span>
+                        <div class="poster-item top10-6">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">AK vs AK</div>
+                                <div class="poster-meta">2020 • Thriller/Comedy</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">7</span>
+                        <div class="poster-item top10-7">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Jawan</div>
+                                <div class="poster-meta">2023 • Action/Thriller</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">8</span>
+                        <div class="poster-item top10-8">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">RRR</div>
+                                <div class="poster-meta">2022 • Action/Drama</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">9</span>
+                        <div class="poster-item top10-9">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Sacred Games</div>
+                                <div class="poster-meta">2018 • Crime/Drama</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-10-item" tabindex="0">
+                        <span class="top-10-rank">10</span>
+                        <div class="poster-item top10-10">
+                            <div class="poster-info">
+                                <div class="poster-actions">
+                                    <button class="action-btn play-icon" title="Play">▶</button>
+                                    <button class="action-btn add-icon" title="Add to My List">+</button>
+                                    <button class="action-btn like-icon" title="Like">👍</button>
+                                    <button class="action-btn info-icon" title="More Info"></button>
+                                </div>
+                                <div class="poster-title">Mirzapur</div>
+                                <div class="poster-meta">2018 • Crime/Action</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="scroll-btn scroll-right">›</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Questions? Call 1-844-505-2993</p>
+        <p>&copy; 2025 Netflix, Inc. Enhanced Clone Experience</p>
+    </footer>
+
+</body>
+</html>
